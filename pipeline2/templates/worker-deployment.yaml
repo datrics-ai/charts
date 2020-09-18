@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pipeline2.worker.fullname" . }}
+  labels:
+    {{- include "pipeline2.worker.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "pipeline2.worker.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "pipeline2.worker.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "pipeline2.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: MINIO_HOST_URL
+              value: {{ .Values.config.minio.hostUrl | quote  }}
+            - name: MINIO_USE_SSL
+              value: {{ .Values.config.minio.useSSL | quote }}
+            - name: MINIO_ACCESS_KEY
+              value: {{ .Values.config.minio.accessKey | quote  }}
+            - name: MINIO_SECRET_KEY
+              value: {{ .Values.config.minio.secretKey | quote  }}
+            - name: CELERY_BROKER_URL
+              value: {{ .Values.config.celery.brokerUrl | quote  }}
+            - name: CELERY_RESULT_BACKEND
+              value: {{ .Values.config.celery.resultBackend | quote  }}
+            - name: LOGSTASH_HOST
+              value: {{ .Values.config.logstash.host | quote  }}
+            - name: LOGSTASH_PORT
+              value: {{ .Values.config.logstash.port | quote  }}
+            - name: LOGSTASH_VERSION
+              value: {{ .Values.config.logstash.version | quote  }}
+            - name: ENV
+              value: {{ .Values.config.env | quote  }}
+            - name: LOG_LEVEL
+              value: {{ .Values.config.logLevel | quote  }}
+          command: ["/bin/bash"]
+          args: ["-c", "celery -A celery_worker.celery worker --loglevel=debug --pool=solo --without-heartbeat --max-tasks-per-child 1 --soft-time-limit 3000 --time-limit 3600"]
+          resources:
+            {{- toYaml .Values.worker.resources | nindent 12 }}
+      {{- with .Values.worker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.worker.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.worker.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
