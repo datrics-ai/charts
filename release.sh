@@ -4,8 +4,7 @@ cd charts
 helm package pipeline2
 
 cd ..
-helm repo index charts/
-mv charts/index.yaml .
+helm repo index .
 
 # tag it
 git add -A
