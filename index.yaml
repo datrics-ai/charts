@@ -9,7 +9,7 @@ entries:
     name: pipeline2
     type: application
     urls:
-    - pipeline2-0.1.1.tgz
+    - charts/pipeline2-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.0.75
@@ -19,6 +19,6 @@ entries:
     name: pipeline2
     type: application
     urls:
-    - pipeline2-0.1.0.tgz
+    - charts/pipeline2-0.1.0.tgz
     version: 0.1.0
 generated: "2020-09-20T17:20:58.682503+03:00"
