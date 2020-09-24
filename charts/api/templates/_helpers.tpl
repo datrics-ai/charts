@@ -24,6 +24,22 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
+
+{{- define "api.baseURL" -}}
+{{- if .Values.ingress.enabled -}}  
+  {{- $host := index .Values.ingress.hosts 0 -}}
+  {{- $ingressPath := $.Values.ingress.path -}}
+  {{- if $.Values.ingress.tls -}}
+    {{- printf "https://%s%s" $host $ingressPath -}}
+  {{- else -}}
+    {{- printf "http://%s%s" $host $ingressPath -}}
+  {{- end -}}
+{{- else -}}
+    {{- "http://localhost:3000" -}}
+{{- end -}}
+{{- end -}}
+
+
 {{/*
 Create chart name and version as used by the chart label.
 */}}

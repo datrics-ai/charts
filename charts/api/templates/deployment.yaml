@@ -1,3 +1,13 @@
+{{- $baseURL := "http://localhost:3000" -}}
+{{- if .Values.ingress.enabled }}  
+  {{- $host := index .Values.ingress.hosts 0 }}
+  {{- $ingressPath := $.Values.ingress.path -}}
+  {{- if $.Values.ingress.tls }}
+    {{- $baseURL := printf "https://%s%s" $host $ingressPath -}}
+  {{- else }}
+    {{- $baseURL := printf "http://%s%s" $host $ingressPath -}}
+  {{- end }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -73,13 +83,7 @@ spec:
             - name: HOST
               value: "localhost"
             - name: BASE_URL
-              {{- if .Values.ingress.enabled }}
-                {{- $host := index .Values.ingress.hosts 0 }}
-                {{- $ingressPath := $.Values.ingress.path -}}
-              value: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host }}{{ $ingressPath }}
-              {{- else }}
-              value: http://localhost:3000
-              {{- end }}
+              value: {{ include "api.baseURL" . }}
             - name: MAIL_API_KEY
               value: {{ .Values.config.mailgun.apiKey | quote  }}
             - name: MAIL_DOMAIN
