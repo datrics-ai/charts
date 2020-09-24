@@ -64,6 +64,8 @@ tolerations: []
 
 affinity: {}
 
+setup: {}
+
 storage:
   requests: 100Gi
   className: standard
