@@ -3,9 +3,9 @@ entries:
   api:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2020-09-24T17:28:33.615996+03:00"
+    created: "2020-09-24T17:29:29.989385+03:00"
     description: A Helm chart for Kubernetes
-    digest: 6b3f73eca40388fb187975806bb4ec2e7ec3db3e613f33f13a7d2d375aa1aa20
+    digest: bf6f400ac35a47b348957a8f3a7e0331519a372992e700ddba56727134ae7be9
     name: api
     type: application
     urls:
@@ -14,9 +14,9 @@ entries:
   pipeline2:
   - apiVersion: v2
     appVersion: 0.0.75
-    created: "2020-09-24T17:28:33.619711+03:00"
+    created: "2020-09-24T17:29:29.990726+03:00"
     description: A Helm chart for Kubernetes
-    digest: cde45177053dbf2416f2ae924943e9366d2fd518a09ef4fa5a83686f75ca7c8f
+    digest: 869e66aa07712bb0661c10ad7e1f2ebf2001a79b0df10daffbeb144ce43382d9
     name: pipeline2
     type: application
     urls:
@@ -24,7 +24,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.0.75
-    created: "2020-09-24T17:28:33.616988+03:00"
+    created: "2020-09-24T17:29:29.990205+03:00"
     description: A Helm chart for Kubernetes
     digest: 35f5c8eaf84ca0e3bed7ad31b55a4ca7ef8b7be57fef4a0579a1cb686e3b8185
     name: pipeline2
@@ -32,4 +32,4 @@ entries:
     urls:
     - charts/pipeline2-0.1.0.tgz
     version: 0.1.0
-generated: "2020-09-24T17:28:33.614034+03:00"
+generated: "2020-09-24T17:29:29.98852+03:00"
