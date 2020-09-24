@@ -1,0 +1,152 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "api.fullname" . }}
+  labels:
+    {{- include "api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "api.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "api.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: api-uploads
+          persistentVolumeClaim: 
+            claimName: api-uploads
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.version }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3000"
+            - name: SESSION_SECRET
+              value: {{ .Values.config.sessionSecret | quote  }}
+            - name: DB_HOST
+              value: {{ .Values.config.db.host | quote  }}
+            - name: DB_PORT
+              value: {{ .Values.config.db.port | quote  }}
+            - name: DB_USERNAME
+              value: {{ .Values.config.db.username | quote  }}
+            - name: DB_PASSWORD
+              value: {{ .Values.config.db.password | quote  }}
+            - name: DB
+              value: {{ .Values.config.db.db | quote  }}
+            - name: DB_CONNECTION_NAME
+              value: {{ .Values.config.db.connectionName | quote  }}
+            - name: STORAGE_HOST
+              value: {{ .Values.config.minio.host | quote  }}
+            - name: STORAGE_PORT
+              value: {{ .Values.config.minio.port | quote  }}
+            - name: STORAGE_ACCESS_KEY
+              value: {{ .Values.config.minio.accessKey | quote  }}
+            - name: STORAGE_SECRET_KEY
+              value: {{ .Values.config.minio.secretKey | quote  }}
+            - name: STORAGE_USE_SSL
+              value: {{ .Values.config.minio.useSSL | quote  }}
+            - name: STORAGE_BUCKET
+              value: {{ .Values.config.minio.bucket | quote  }}
+            - name: SENDER_EMAIL
+              value: {{ .Values.config.senderEmail | quote  }}
+            - name: AWS_REGION
+              value:  {{ .Values.config.aws.region | quote  }}
+            - name: AWS_ACCESS_KEY_ID
+              value: {{ .Values.config.aws.accessKeyId | quote  }}
+            - name: AWS_SECRET_ACCESS_KEY
+              value: {{ .Values.config.aws.secretKey | quote  }}
+            - name: HOST
+              value: "localhost"
+            - name: BASE_URL
+              {{- if .Values.ingress.enabled }}
+                {{- $host := index .Values.ingress.hosts 0 }}
+                {{- $ingressPath := $.Values.ingress.path -}}
+              value: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host }}{{ $ingressPath }}
+              {{- else }}
+              value: http://localhost:3000
+              {{- end }}
+            - name: MAIL_API_KEY
+              value: {{ .Values.config.mailgun.apiKey | quote  }}
+            - name: MAIL_DOMAIN
+              value: {{ .Values.config.mailgun.domain | quote  }}
+            - name: MAILCHIMP_API_KEY
+              value: {{ .Values.config.mailchimp.apiKey | quote  }}
+            - name: MAILCHIMP_LIST_ID
+              value: {{ .Values.config.mailchimp.listId | quote  }}
+            - name: FE_BASE_URL
+              value: {{ .Values.config.fe.baseURL | quote  }}
+            - name: FE_ROUTE_SIGN_IN
+              value: {{ .Values.config.fe.signIn | quote  }}
+            - name: FE_ROUTE_RESET_PASSWORD
+              value: {{ .Values.config.fe.resetPassword | quote  }}
+            - name: FE_ROUTE_CONFIRM_EMAIL
+              value: {{ .Values.config.fe.confirmEmail | quote  }}
+            - name: FE_ROUTE_PAYMENT_STRIPE_SUCCESS
+              value: {{ .Values.config.fe.stripeSuccess | quote  }}
+            - name: FE_ROUTE_PAYMENT_STRIPE_CANCEL
+              value: {{ .Values.config.fe.stripeCancel | quote  }}
+            - name: MAILERLITE_SIGN_UP_GROUP_ID
+              value: {{ .Values.config.mailerlite.signUpGroupId | quote  }}
+            - name: MAILERLITE_SUBSCRIBE_GROUP_ID
+              value: {{ .Values.config.mailerlite.subscribeUpGroupId | quote  }}
+            - name: MAILERLITE_API_KEY
+              value: {{ .Values.config.mailerlite.apiKey | quote  }}
+            - name: UPLOADS_DIRECTORY
+              value: {{ .Values.config.uploadDirectoryPath | quote  }}
+            - name: MONGO_URI
+              value: {{ .Values.config.mongo.uri | quote  }}
+            - name: MONGO_COLLECTION
+              value: {{ .Values.config.mongo.collection | quote  }}
+            - name: PIPELINE_API_BASE_URL
+              value: {{ .Values.config.pipeline.baseUrl | quote  }}
+            - name: RUN_PIPELINE_ROUTE
+              value: {{ .Values.config.pipeline.runRoute | quote  }}
+            - name: GET_STATUS_PIPELINE_ROUTE
+              value: {{ .Values.config.pipeline.getStatusRoute | quote  }}
+            - name: PAYMENT_STRIPE_SK_WEB_HOOK
+              value: {{ .Values.config.stripe.skWebHook | quote  }}
+            - name: PAYMENT_STRIPE_SK_API
+              value: {{ .Values.config.stripe.skAPI | quote  }}
+          ports:
+            - name: port-3000
+              containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /
+              port: port-3000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: port-3000
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+          - name: api-uploads
+            mountPath: {{ .Values.config.uploadDirectoryPath | quote  }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
