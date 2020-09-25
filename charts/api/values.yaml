@@ -116,6 +116,7 @@ config:
     baseUrl: "https://pipeline2.platform.datrics.ai"
     runRoute: "/job/create"
     getStatusRoute: "/job/status"
+    cancelRoute: "/job/cancel"
   stripe:
     skWebHook: ""
     skAPI: ""
