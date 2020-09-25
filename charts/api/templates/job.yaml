@@ -107,6 +107,8 @@ spec:
               value: {{ .Values.config.pipeline.runRoute | quote  }}
             - name: GET_STATUS_PIPELINE_ROUTE
               value: {{ .Values.config.pipeline.getStatusRoute | quote  }}
+            - name: CANCEL_PIPELINE_ROUTE
+              value: {{ .Values.config.pipeline.cancelRoute | quote }}
             - name: PAYMENT_STRIPE_SK_WEB_HOOK
               value: {{ .Values.config.stripe.skWebHook | quote  }}
             - name: PAYMENT_STRIPE_SK_API
