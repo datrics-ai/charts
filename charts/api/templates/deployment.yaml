@@ -128,6 +128,8 @@ spec:
               value: {{ .Values.config.stripe.skWebHook | quote  }}
             - name: PAYMENT_STRIPE_SK_API
               value: {{ .Values.config.stripe.skAPI | quote  }}
+            - name: PRIVATE_PLAN
+              value: {{ .Values.config.privatePlan | quote }}
           ports:
             - name: port-3000
               containerPort: 3000

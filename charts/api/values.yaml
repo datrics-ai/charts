@@ -74,6 +74,7 @@ config:
   sessionSecret: "aaaasssdddd"
   senderEmail: "robot@app.datrics.ai"
   uploadDirectoryPath: "/uploads"
+  privatePlan: ""
   db:
     host: "postgres-postgresql"
     port: "5432"
