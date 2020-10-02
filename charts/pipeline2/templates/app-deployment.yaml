@@ -50,6 +50,11 @@ spec:
               value: {{ .Values.config.env | quote  }}
             - name: LOG_LEVEL
               value: {{ .Values.config.logLevel | quote  }}
+          command:
+            - "/bin/bash"
+          args:
+            - "-c"
+            - "gunicorn -w 3 run:app -b 0.0.0.0:8000"
           ports:
             - name: port-8000
               containerPort: 8000
