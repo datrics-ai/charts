@@ -62,3 +62,12 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+config:
+  pageSize: 20
+  host: 0.0.0.0
+  minio:
+    host: minio.app.datrics.ai
+    useSSL: true
+    accessKey: minio
+    secretKey: minio
