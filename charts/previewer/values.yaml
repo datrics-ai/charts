@@ -71,3 +71,7 @@ config:
     useSSL: true
     accessKey: minio
     secretKey: minio
+
+storage:
+  requests: 100Gi
+  className: standard
