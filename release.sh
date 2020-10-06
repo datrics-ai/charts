@@ -3,6 +3,7 @@
 cd charts
 helm package pipeline2
 helm package api
+helm package previewer
 
 cd ..
 helm repo index .
