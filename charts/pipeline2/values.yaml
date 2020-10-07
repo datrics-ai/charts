@@ -52,6 +52,13 @@ app:
 
   affinity: {}
 
+  command:
+    - "/bin/bash"
+
+  args:
+    - "-c"
+    - "gunicorn -w 3 run:app -b 0.0.0.0:8000"
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
