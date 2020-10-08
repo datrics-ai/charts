@@ -50,8 +50,8 @@ spec:
               value: {{ .Values.config.env | quote  }}
             - name: LOG_LEVEL
               value: {{ .Values.config.logLevel | quote  }}
-          command: ["/bin/bash"]
-          args: ["-c", "celery -A celery_worker.celery worker --loglevel=debug --pool=solo --without-heartbeat --max-tasks-per-child 1 --soft-time-limit 3000 --time-limit 3600"]
+          command: {{- toYaml .Values.worker.command | nindent 12  }}
+          args: {{- toYaml .Values.worker.args | nindent 12 }}
           resources:
             {{- toYaml .Values.worker.resources | nindent 12 }}
       {{- with .Values.worker.nodeSelector }}

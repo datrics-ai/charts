@@ -15,6 +15,11 @@ worker:
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
+  command: 
+    - "/bin/bash"
+  args:
+    - "-c"
+    - "celery -A celery_worker.celery worker --loglevel=debug --pool=solo --without-heartbeat --max-tasks-per-child 1 --soft-time-limit 3000 --time-limit 3600"
 
   nodeSelector: {}
   tolerations: []
