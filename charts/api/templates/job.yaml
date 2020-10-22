@@ -116,4 +116,8 @@ spec:
               value: {{ .Values.config.stripe.skAPI | quote  }}
             - name: PRIVATE_PLAN
               value: {{ .Values.config.privatePlan | quote }}
+            - name: SENTRY_DSN
+              value: {{ .Values.config.sentry.dsn | quote }}
+            - name: SENTRY_ENV
+              value: {{ .Values.config.sentry.env | quote }}
       restartPolicy: Never

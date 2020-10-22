@@ -121,3 +121,6 @@ config:
   stripe:
     skWebHook: ""
     skAPI: ""
+  sentry:
+    dsn: "https://ec271809db8d4d60b8c713703f99e683@o363951.ingest.sentry.io/5478308"
+    env: "production"
