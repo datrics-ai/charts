@@ -13,6 +13,10 @@ spec:
     metadata:
       labels:
         {{- include "pipeline2.app.selectorLabels" . | nindent 8 }}
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9102'
+        prometheus.io/path: '/metrics'
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -22,6 +26,10 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
+        - name: statsd-exporter
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: prom/statsd-exporter:latest
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
