@@ -36,6 +36,9 @@ spec:
           image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.version }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            {{ if .Values.app.envs }}
+            {{- toYaml .Values.app.envs | nindent 12  }}
+            {{ end }}
             - name: MINIO_HOST_URL
               value: {{ .Values.config.minio.hostUrl | quote  }}
             - name: MINIO_USE_SSL
