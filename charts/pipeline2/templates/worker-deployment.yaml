@@ -48,6 +48,8 @@ spec:
               value: {{ .Values.config.logstash.version | quote  }}
             - name: ENV
               value: {{ .Values.config.env | quote  }}
+            - name: RELEASE
+              value: {{ .Values.config.release | quote }}
             - name: LOG_LEVEL
               value: {{ .Values.config.logLevel | quote  }}
           command: {{- toYaml .Values.worker.command | nindent 12  }}

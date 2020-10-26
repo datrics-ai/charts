@@ -112,4 +112,5 @@ config:
     port: 9200
     version: 1
   env: production
+  release: unspecified
   logLevel: INFO
