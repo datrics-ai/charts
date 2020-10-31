@@ -68,18 +68,14 @@ spec:
           ports:
             - name: port-8000
               containerPort: 8000
-          {{- if .Values.app.livenessProbe.enabled -}}
           livenessProbe:
             httpGet:
               path: /
               port: port-8000
-          {{- end }}
-          {{- if .Values.app.readinessProbe.enabled -}}
           readinessProbe:
             httpGet:
               path: /
               port: port-8000
-          {{- end }}
           resources:
             {{- toYaml .Values.app.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
