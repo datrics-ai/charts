@@ -6,6 +6,10 @@ metadata:
     {{- include "pipeline2.worker.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.worker.replicaCount }}
+  {{- with .Values.worker.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "pipeline2.worker.selectorLabels" . | nindent 6 }}
