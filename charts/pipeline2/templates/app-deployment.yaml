@@ -67,6 +67,8 @@ spec:
               value: {{ .Values.config.release | quote }}
             - name: LOG_LEVEL
               value: {{ .Values.config.logLevel | quote  }}
+            - name: DASK_RESULTS_BACKEND
+              value: {{ .Values.config.daskResultsBackend | quote }}
           command: {{- toYaml .Values.app.command | nindent 12  }}
           args: {{- toYaml .Values.app.args | nindent 12 }}
           ports:

@@ -118,3 +118,4 @@ config:
   env: production
   release: unspecified
   logLevel: INFO
+  daskResultsBackend: ""
