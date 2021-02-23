@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "pipeline2.gc.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.gc.replicaCount }}
   {{- with .Values.gc.strategy }}
   strategy:
     {{- toYaml . | nindent 4 }}
