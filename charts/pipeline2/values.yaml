@@ -2,6 +2,14 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+gc:
+  enabled: false
+  command: 
+    - "/bin/bash"
+  args:
+    - "-c"
+    - "python cron.py"
+
 worker:
   strategy:
     type: Recreate
@@ -21,7 +29,7 @@ worker:
     - "/bin/bash"
   args:
     - "-c"
-    - "celery -A celery_worker.celery worker --loglevel=debug --pool=solo --without-heartbeat --max-tasks-per-child 1 --soft-time-limit 3000 --time-limit 3600"
+    - "dask-worker dask-scheduler:8786 --nprocs 1 --nthreads 4 --memory-limit 8g --preload app"
 
   nodeSelector: {}
   tolerations: []

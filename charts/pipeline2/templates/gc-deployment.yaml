@@ -1,0 +1,81 @@
+{{ if .Values.gc.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pipeline2.gc.fullname" . }}
+  labels:
+    {{- include "pipeline2.gc.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  {{- with .Values.gc.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "pipeline2.gc.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "pipeline2.gc.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "pipeline2.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.version }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{ if .Values.gc.envs }}
+            {{- toYaml .Values.gc.envs | nindent 12  }}
+            {{ end }}
+            - name: MINIO_HOST_URL
+              value: {{ .Values.config.minio.hostUrl | quote  }}
+            - name: MINIO_USE_SSL
+              value: {{ .Values.config.minio.useSSL | quote }}
+            - name: MINIO_ACCESS_KEY
+              value: {{ .Values.config.minio.accessKey | quote  }}
+            - name: MINIO_SECRET_KEY
+              value: {{ .Values.config.minio.secretKey | quote  }}
+            - name: CELERY_BROKER_URL
+              value: {{ .Values.config.celery.brokerUrl | quote  }}
+            - name: CELERY_RESULT_BACKEND
+              value: {{ .Values.config.celery.resultBackend | quote  }}
+            - name: LOGSTASH_HOST
+              value: {{ .Values.config.logstash.host | quote  }}
+            - name: LOGSTASH_PORT
+              value: {{ .Values.config.logstash.port | quote  }}
+            - name: LOGSTASH_VERSION
+              value: {{ .Values.config.logstash.version | quote  }}
+            - name: ENV
+              value: {{ .Values.config.env | quote  }}
+            - name: RELEASE
+              value: {{ .Values.config.release | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.config.logLevel | quote  }}
+            - name: DASK_RESULTS_BACKEND
+              value: {{ .Values.config.daskResultsBackend | quote }}
+          command: {{- toYaml .Values.gc.command | nindent 12  }}
+          args: {{- toYaml .Values.gc.args | nindent 12 }}
+          resources:
+            {{- toYaml .Values.gc.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}
