@@ -35,6 +35,9 @@ spec:
           - name: previewer-cache
             mountPath: /cache-directory
           env:
+            {{ if .Values.envs }}
+            {{- toYaml .Values.envs | nindent 12  }}
+            {{ end }}
             - name: PAGE_SIZE
               value: {{ .Values.config.pageSize | quote  }}
             - name: PORT
