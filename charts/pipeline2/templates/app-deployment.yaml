@@ -75,10 +75,12 @@ spec:
             - name: port-8000
               containerPort: 8000
           livenessProbe:
+            initialDelaySeconds: 15
             httpGet:
               path: /
               port: port-8000
           readinessProbe:
+            initialDelaySeconds: 5
             httpGet:
               path: /
               port: port-8000
