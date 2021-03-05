@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pipeline2.scheduler.fullname" . }}
+  labels:
+    {{- include "pipeline2.scheduler.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.scheduler.service.type }}
+  ports:
+    {{- if .Values.scheduler.dashboard.enabled }}
+    - port: {{ .Values.scheduler.dashboard.port }}
+      targetPort: 8787
+      protocol: TCP
+      name: port-8787
+    {{ end }}
+    - port: {{ .Values.scheduler.service.port }}
+      targetPort: 8786
+      protocol: TCP
+      name: port-8786
+  selector:
+    {{- include "pipeline2.scheduler.selectorLabels" . | nindent 4 }}
