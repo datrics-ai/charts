@@ -10,5 +10,8 @@ spec:
     - port: {{ .Values.service.port }}
       targetPort: port-8050
       name: port-8050
+    - port: {{ .Values.pivottable.service.port }}
+      targetPort: port-8051
+      name: port-8051
   selector:
     {{- include "previewer.selectorLabels" . | nindent 4 }}

@@ -22,10 +22,59 @@ spec:
         - name: previewer-cache
           persistentVolumeClaim: 
             claimName: previewer-cache
+        - name: pivottable-cache
+          persistentVolumeClaim: 
+            claimName: pivottable-cache
       serviceAccountName: {{ include "previewer.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
+        - name: {{ .Chart.Name }}-pivottable
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.version }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - "/bin/bash"
+          args:
+            - "-c"
+            - "gunicorn pivot_table:server"
+          volumeMounts:
+          - name: pivottable-cache
+            mountPath: /cache-directory
+          env:
+            {{ if .Values.envs }}
+            {{- toYaml .Values.envs | nindent 12  }}
+            {{ end }}
+            - name: PORT
+              value: "8051"
+            - name: HOST
+              value: {{ .Values.config.host | quote  }}
+            - name: MINIO_HOST_URL
+              value: {{ .Values.config.minio.host | quote  }}
+            - name: MINIO_HOST_IS_SECURE
+              value: {{ .Values.config.minio.useSSL | quote  }}
+            - name: MINIO_ACCESS_KEY
+              value: {{ .Values.config.minio.accessKey | quote  }}
+            - name: MINIO_SECRET_KEY
+              value: {{ .Values.config.minio.secretKey | quote  }}
+            - name: CACHE_REDIS_ENABLED
+              value: "false"
+            - name: FS_CACHE_DIR
+              value: "/cache-directory"
+          ports:
+            - containerPort: 8051
+              name: port-8051
+          livenessProbe:
+            httpGet:
+              path: /
+              port: port-8051
+          readinessProbe:
+            httpGet:
+              path: /
+              port: port-8051
+          resources:
+            {{- toYaml .Values.pivottable.resources | nindent 12 }}
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

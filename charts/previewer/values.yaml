@@ -45,6 +45,17 @@ ingress:
   # hosts: []
   # tls: {}
 
+pivottable:
+  ingress:
+    enabled: false
+  resources: {}
+  service:
+    type: ClusterIP
+    port: 8051
+  storage:
+    requests: 50Gi
+    className: standard
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -75,5 +86,5 @@ config:
     secretKey: minio
 
 storage:
-  requests: 100Gi
+  requests: 50Gi
   className: standard
