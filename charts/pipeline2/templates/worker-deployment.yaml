@@ -1,15 +1,26 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
   name: {{ include "pipeline2.worker.fullname" . }}
   labels:
     {{- include "pipeline2.worker.labels" . | nindent 4 }}
 spec:
+  ports:
+  - port: 8789
+    name: port-8789
+  clusterIP: None
+  selector:
+    {{- include "pipeline2.worker.selectorLabels" . | nindent 4 }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "pipeline2.worker.fullname" . }}
+  labels:
+    {{- include "pipeline2.worker.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "pipeline2.worker.fullname" . }}
   replicas: {{ .Values.worker.replicaCount }}
-  {{- with .Values.worker.strategy }}
-  strategy:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "pipeline2.worker.selectorLabels" . | nindent 6 }}
@@ -33,6 +44,12 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8789
+              name: port-8789
+          {{- if .Values.worker.cache.enabled }}
+          volumeMounts:
+          - name: worker-cache
+            mountPath: {{ .Values.worker.cache.tempDir | quote }}
+          {{- end }}
           env:
             {{ if .Values.worker.envs }}
             {{- toYaml .Values.worker.envs | nindent 12  }}
@@ -61,6 +78,10 @@ spec:
               value: {{ .Values.config.release | quote }}
             - name: LOG_LEVEL
               value: {{ .Values.config.logLevel | quote  }}
+            {{- if .Values.worker.cache.enabled }}
+            - name: DASK__TEMPORARY_DIRECTORY
+              value: {{ .Values.worker.cache.tempDir | quote }}
+            {{- end }}
           command: {{- toYaml .Values.worker.command | nindent 12  }}
           args: {{- toYaml .Values.worker.args | nindent 12 }}
           resources:
@@ -77,3 +98,14 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+  {{- if .Values.worker.cache.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: worker-cache
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.worker.cache.storage.requests | quote  }}
+      storageClassName: {{ .Values.worker.cache.storage.className | quote  }}
+  {{- end }}

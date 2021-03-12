@@ -18,6 +18,12 @@ gc:
     - "python cron.py"
 
 worker:
+  cache:
+    enabled: false
+    # tempDir: /worker-cache
+    # storage:
+    #   requests: 100Gi
+    #   className: standard
   strategy:
     type: Recreate
   replicaCount: 3
