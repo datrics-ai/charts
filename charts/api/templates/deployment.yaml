@@ -141,10 +141,14 @@ spec:
             httpGet:
               path: /api/v1
               port: port-3000
+            initialDelaySeconds: 60
+            periodSeconds: 60
           readinessProbe:
             httpGet:
               path: /api/v1
               port: port-3000
+            initialDelaySeconds: 60
+            periodSeconds: 60
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
