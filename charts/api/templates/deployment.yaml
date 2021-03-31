@@ -9,12 +9,13 @@
   {{- end }}
 {{- end }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "api.fullname" . }}
   labels:
     {{- include "api.labels" . | nindent 4 }}
 spec:
+  serviceName: {{ include "api.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
@@ -166,3 +167,12 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: api-uploads
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.storage.requests | quote  }}
+      storageClassName: {{ .Values.storage.className | quote  }}
