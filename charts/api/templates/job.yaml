@@ -27,6 +27,8 @@ spec:
         image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.version }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command: ["npm", "run", "prod"]
+        resources:
+            {{- toYaml .Values.setup.resources | nindent 12 }}
         env:
             - name: NODE_ENV
               value: "production"
