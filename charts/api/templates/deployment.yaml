@@ -83,8 +83,13 @@ spec:
               value: {{ .Values.config.aws.secretKey | quote  }}
             - name: HOST
               value: "localhost"
+            {{- if .Values.ingress.enabled }}
             - name: BASE_URL
               value: {{ include "api.baseURL" . }}
+            {{- else }}
+            - name: BASE_URL
+              value: {{ .Values.config.baseURL | quote  }}
+            {{ end }}
             - name: MAIL_API_KEY
               value: {{ .Values.config.mailgun.apiKey | quote  }}
             - name: MAIL_DOMAIN
