@@ -18,6 +18,10 @@ gc:
     - "python cron.py"
 
 worker:
+  efs:
+    enabled: false
+    # efsDir: /worker-efs
+    # className: efs-sc
   cache:
     enabled: false
     # tempDir: /worker-cache

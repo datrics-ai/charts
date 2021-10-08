@@ -45,10 +45,14 @@ spec:
           ports:
             - containerPort: 8789
               name: port-8789
-          {{- if .Values.worker.cache.enabled }}
           volumeMounts:
+          {{- if .Values.worker.cache.enabled }}
           - name: worker-cache
             mountPath: {{ .Values.worker.cache.tempDir | quote }}
+          {{- end }}
+          {{- if .Values.worker.efs.enabled }}
+          - name: worker-efs
+            mountPath: {{ default "/efs" .Values.worker.efs.efsDir | quote }}
           {{- end }}
           env:
             {{ if .Values.worker.envs }}
@@ -82,6 +86,10 @@ spec:
             - name: DASK__TEMPORARY_DIRECTORY
               value: {{ .Values.worker.cache.tempDir | quote }}
             {{- end }}
+            {{- if .Values.worker.efs.enabled }}
+            - name: EFS_DIRECTORY
+              value: {{ default "/efs" .Values.worker.efs.efsDir | quote }}
+            {{- end }}
           command: {{- toYaml .Values.worker.command | nindent 12  }}
           args: {{- toYaml .Values.worker.args | nindent 12 }}
           resources:
@@ -108,4 +116,14 @@ spec:
         requests:
           storage: {{ .Values.worker.cache.storage.requests | quote  }}
       storageClassName: {{ .Values.worker.cache.storage.className | quote  }}
+  {{- end }}
+  {{- if .Values.worker.efs.enabled }}
+  - metadata:
+      name: worker-efs
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 20Gi
+      storageClassName: {{ .Values.worker.efs.className }}
   {{- end }}
