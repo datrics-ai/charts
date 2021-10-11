@@ -118,12 +118,8 @@ spec:
       storageClassName: {{ .Values.worker.cache.storage.className | quote  }}
   {{- end }}
   {{- if .Values.worker.efs.enabled }}
-  - metadata:
-      name: worker-efs
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 20Gi
-      storageClassName: {{ .Values.worker.efs.className }}
+  volumes:
+  - name: worker-efs
+    persistentVolumeClaim:
+      claimName: worker-efs
   {{- end }}

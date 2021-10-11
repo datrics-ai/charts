@@ -1,0 +1,13 @@
+{{- if .Values.worker.efs.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: worker-efs
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: {{ .Values.worker.efs.className }}
+  resources:
+    requests:
+      storage: 5Gi
+{{- end }}
