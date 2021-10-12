@@ -94,6 +94,12 @@ spec:
           args: {{- toYaml .Values.worker.args | nindent 12 }}
           resources:
             {{- toYaml .Values.worker.resources | nindent 12 }}
+      {{- if .Values.worker.efs.enabled }}
+      volumes:
+      - name: worker-efs
+        persistentVolumeClaim:
+          claimName: worker-efs
+      {{- end }}
       {{- with .Values.worker.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -117,9 +123,4 @@ spec:
           storage: {{ .Values.worker.cache.storage.requests | quote  }}
       storageClassName: {{ .Values.worker.cache.storage.className | quote  }}
   {{- end }}
-  {{- if .Values.worker.efs.enabled }}
-  volumes:
-  - name: worker-efs
-    persistentVolumeClaim:
-      claimName: worker-efs
-  {{- end }}
+  
