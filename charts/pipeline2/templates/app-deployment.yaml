@@ -69,6 +69,10 @@ spec:
               value: {{ .Values.config.logLevel | quote  }}
             - name: DASK_RESULTS_BACKEND
               value: {{ .Values.config.daskResultsBackend | quote }}
+            {{- if .Values.worker.efs.enabled }}
+            - name: EFS_DIRECTORY
+              value: {{ default "/efs" .Values.worker.efs.efsDir | quote }}
+            {{- end }}
           command: {{- toYaml .Values.app.command | nindent 12  }}
           args: {{- toYaml .Values.app.args | nindent 12 }}
           ports:
