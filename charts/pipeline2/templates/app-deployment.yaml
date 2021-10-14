@@ -78,6 +78,11 @@ spec:
           ports:
             - name: port-8000
               containerPort: 8000
+          {{- if .Values.worker.efs.enabled }}
+          volumeMounts:
+          - name: worker-efs
+            mountPath: {{ default "/efs" .Values.worker.efs.efsDir | quote }}
+          {{- end }}
           livenessProbe:
             initialDelaySeconds: 15
             httpGet:
@@ -90,6 +95,12 @@ spec:
               port: port-8000
           resources:
             {{- toYaml .Values.app.resources | nindent 12 }}
+      {{- if .Values.worker.efs.enabled }}
+      volumes:
+      - name: worker-efs
+        persistentVolumeClaim:
+          claimName: worker-efs
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
