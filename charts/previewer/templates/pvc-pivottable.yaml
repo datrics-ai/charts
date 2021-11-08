@@ -1,4 +1,4 @@
-{{- if .Values.pivottable.torage.enabled -}}
+{{- if .Values.pivottable.storage.enabled -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
