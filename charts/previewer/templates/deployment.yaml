@@ -17,14 +17,12 @@ spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-    {{- end }}    
-      volumes:
+    {{- end }}
     {{- if .Values.storage.enabled -}}
+      volumes:    
         - name: previewer-cache
           persistentVolumeClaim: 
             claimName: previewer-cache
-    {{- end }}
-    {{- if .Values.pivottable.storage.enabled -}}
         - name: pivottable-cache
           persistentVolumeClaim: 
             claimName: pivottable-cache
