@@ -18,7 +18,6 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- if .Values.storage.enabled -}}
       volumes:    
         - name: previewer-cache
           persistentVolumeClaim: 
@@ -26,7 +25,6 @@ spec:
         - name: pivottable-cache
           persistentVolumeClaim: 
             claimName: pivottable-cache
-    {{- end }}
       serviceAccountName: {{ include "previewer.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
