@@ -39,11 +39,9 @@ spec:
           args:
             - "-c"
             - "gunicorn pivot_table:server"
-          {{- if .Values.pivottable.storage.enabled -}}
           volumeMounts:
           - name: pivottable-cache
             mountPath: /cache-directory
-          {{- end }}
           env:
             {{ if .Values.envs }}
             {{- toYaml .Values.envs | nindent 12  }}
@@ -84,11 +82,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.version }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if .Values.storage.enabled -}}
           volumeMounts:
           - name: previewer-cache
             mountPath: /cache-directory
-          {{- end }}
           env:
             {{ if .Values.envs }}
             {{- toYaml .Values.envs | nindent 12  }}
