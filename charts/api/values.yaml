@@ -121,6 +121,8 @@ config:
     runRoute: "/job/create"
     getStatusRoute: "/job/status"
     cancelRoute: "/job/cancel"
+  deploymentScheduler:
+    baseUrl: "https://deployment.testing.datrics.ai"
   stripe:
     skWebHook: ""
     skAPI: ""
