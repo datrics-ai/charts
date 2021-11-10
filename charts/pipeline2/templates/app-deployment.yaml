@@ -69,6 +69,14 @@ spec:
               value: {{ .Values.config.logLevel | quote  }}
             - name: DASK_RESULTS_BACKEND
               value: {{ .Values.config.daskResultsBackend | quote }}
+            {{- if .Values.deployer.enabled }}
+            - name: BACKEND_REDIS_HOST
+              value: {{ .Values.deployer.redis.host | quote  }}
+            - name: BACKEND_REDIS_DB
+              value: {{ .Values.deployer.redis.db | quote  }}
+            - name: BACKEND_REDIS_PORT
+              value: {{ .Values.deployer.redis.port | quote  }}
+            {{- end }}
             {{- if .Values.worker.efs.enabled }}
             - name: EFS_DIRECTORY
               value: {{ default "/efs" .Values.worker.efs.efsDir | quote }}

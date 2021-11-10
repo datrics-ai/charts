@@ -158,3 +158,47 @@ config:
   release: unspecified
   logLevel: INFO
   daskResultsBackend: ""
+
+deployer:
+  enabled: false
+  redis:
+    host: ""
+    port: ""
+    db: ""
+  tasksStream: ""
+  resultsStream: ""
+  
+  command: ["/bin/bash"]
+  args: ["-c", "gunicorn -k gevent -b 0.0.0.0:8001 deployment_run:app"]
+  envs: []
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  nameOverride: ""
+  fullnameOverride: ""
+  resources: {}
+
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  service:
+    type: ClusterIP
+    port: 8001
+  
+  ingress:
+    enabled: false
+    # annotations:
+      # kubernetes.io/ingress.class: nginx
+      # certmanager.k8s.io/cluster-issuer: "letsencrypt-production"
+    # path: /
+    # hosts: []
+    # tls: {}

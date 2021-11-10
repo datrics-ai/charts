@@ -82,6 +82,14 @@ spec:
               value: {{ .Values.config.release | quote }}
             - name: LOG_LEVEL
               value: {{ .Values.config.logLevel | quote  }}
+            {{- if .Values.deployer.enabled }}
+            - name: BACKEND_REDIS_HOST
+              value: {{ .Values.deployer.redis.host | quote  }}
+            - name: BACKEND_REDIS_DB
+              value: {{ .Values.deployer.redis.db | quote  }}
+            - name: BACKEND_REDIS_PORT
+              value: {{ .Values.deployer.redis.port | quote  }}
+            {{- end }}
             {{- if .Values.worker.cache.enabled }}
             - name: DASK__TEMPORARY_DIRECTORY
               value: {{ .Values.worker.cache.tempDir | quote }}

@@ -1,0 +1,86 @@
+{{- if .Values.deployer.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pipeline2.deployer.fullname" . }}
+  labels:
+    {{- include "pipeline2.deployer.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  {{- with .Values.deployer.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "pipeline2.deployer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "pipeline2.deployer.selectorLabels" . | nindent 8 }}
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9102'
+        prometheus.io/path: '/metrics'
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "pipeline2.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: statsd-exporter
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: prom/statsd-exporter:latest
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.version }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{ if .Values.deployer.envs }}
+            {{- toYaml .Values.deployer.envs | nindent 12  }}
+            {{ end }}
+            - name: BACKEND_REDIS_HOST
+              value: {{ .Values.deployer.redis.host | quote  }}
+            - name: BACKEND_REDIS_DB
+              value: {{ .Values.deployer.redis.db | quote  }}
+            - name: BACKEND_REDIS_PORT
+              value: {{ .Values.deployer.redis.port | quote  }}
+            - name: DEPLOYMENTS_STREAM
+              value: {{ .Values.deployer.tasksStream | quote  }}
+            - name: PIPELINE_RESULTS_STREAM
+              value: {{ .Values.deployer.resultsStream | quote  }}
+          command: {{- toYaml .Values.deployer.command | nindent 12  }}
+          args: {{- toYaml .Values.deployer.args | nindent 12 }}
+          ports:
+            - name: port-8001
+              containerPort: 8001
+          livenessProbe:
+            initialDelaySeconds: 15
+            httpGet:
+              path: /
+              port: port-8001
+          readinessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              path: /
+              port: port-8001
+          resources:
+            {{- toYaml .Values.deployer.resources | nindent 12 }}
+      {{- with .Values.deployer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.deployer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.deployer.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}

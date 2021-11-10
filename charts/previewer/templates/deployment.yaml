@@ -18,13 +18,19 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      {{- if or (.Values.storage.enabled) (.Values.pivottable.storage.enabled) }}
       volumes:
+      {{- if .Values.storage.enabled }}
       - name: previewer-cache
         persistentVolumeClaim: 
           claimName: previewer-cache
+      {{- end }}
+      {{- if .Values.pivottable.storage.enabled }}
       - name: pivottable-cache
         persistentVolumeClaim: 
           claimName: pivottable-cache
+      {{- end }}
+      {{- end }}
       serviceAccountName: {{ include "previewer.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -39,9 +45,11 @@ spec:
           args:
             - "-c"
             - "gunicorn pivot_table:server"
+          {{- if .Values.pivottable.storage.enabled }}
           volumeMounts:
           - name: pivottable-cache
-            mountPath: /cache-directory
+            mountPath: {{ .Values.pivottable.storage.dir | default "/cache-directory" | quote }} 
+          {{- end }}
           env:
             {{ if .Values.envs }}
             {{- toYaml .Values.envs | nindent 12  }}
@@ -60,8 +68,10 @@ spec:
               value: {{ .Values.config.minio.secretKey | quote  }}
             - name: CACHE_REDIS_ENABLED
               value: "false"
+            {{- if .Values.pivottable.storage.enabled }}
             - name: FS_CACHE_DIR
-              value: "/cache-directory"
+              value: {{ .Values.pivottable.storage.dir | default "/cache-directory" | quote }}
+            {{- end }}
             - name: CACHE_ENABLED
               value: {{ .Values.pivottable.storage.enabled | quote }}
           ports:
@@ -82,9 +92,11 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.version }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.storage.enabled }}
           volumeMounts:
           - name: previewer-cache
-            mountPath: /cache-directory
+            mountPath: {{ .Values.storage.dir | default "/cache-directory" | quote }}
+          {{- end }}
           env:
             {{ if .Values.envs }}
             {{- toYaml .Values.envs | nindent 12  }}
@@ -105,8 +117,10 @@ spec:
               value: {{ .Values.config.minio.secretKey | quote  }}
             - name: CACHE_REDIS_ENABLED
               value: "false"
+            {{- if .Values.storage.enabled }}
             - name: FS_CACHE_DIR
-              value: "/cache-directory"
+              value: {{ .Values.storage.dir | default "/cache-directory" | quote }}
+            {{- end }}
             - name: CACHE_ENABLED
               value: {{ .Values.storage.enabled | quote }}
           ports:
