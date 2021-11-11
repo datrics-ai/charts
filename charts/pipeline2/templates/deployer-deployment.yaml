@@ -59,16 +59,16 @@ spec:
           ports:
             - name: port-8001
               containerPort: 8001
-          # livenessProbe:
-          #   initialDelaySeconds: 15
-          #   httpGet:
-          #     path: /
-          #     port: port-8001
-          # readinessProbe:
-          #   initialDelaySeconds: 5
-          #   httpGet:
-          #     path: /
-          #     port: port-8001
+          livenessProbe:
+            initialDelaySeconds: 15
+            httpGet:
+              path: /
+              port: port-8001
+          readinessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              path: /
+              port: port-8001
           resources:
             {{- toYaml .Values.deployer.resources | nindent 12 }}
       {{- with .Values.deployer.nodeSelector }}
