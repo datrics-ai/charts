@@ -48,6 +48,12 @@ spec:
               value: {{ .Values.config.db.db | quote  }}
             - name: DB_CONNECTION_NAME
               value: {{ .Values.config.db.connectionName | quote  }}
+            - name: REDIS_HOST
+              value: {{ .Values.config.redis.host | quote  }}
+            - name: REDIS_PORT
+              value: {{ .Values.config.redis.port | quote  }}
+            - name: REDIS_DB
+              value: {{ .Values.config.redis.db | quote  }}
             - name: STORAGE_HOST
               value: {{ .Values.config.minio.host | quote  }}
             - name: STORAGE_PORT

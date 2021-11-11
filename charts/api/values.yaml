@@ -85,6 +85,10 @@ config:
     password: "postgres"
     db: "postgres"
     connectionName: "production"
+  redis:
+    host: "redis-master"
+    port: "6379"
+    db: "2"
   minio:
     host: "minio"
     port: "9000"
@@ -122,7 +126,7 @@ config:
     getStatusRoute: "/job/status"
     cancelRoute: "/job/cancel"
   deploymentScheduler:
-    baseUrl: "https://deployment.testing.datrics.ai"
+    baseUrl: "http://pipeline2h-pipeline2-deployer:8001"
   stripe:
     skWebHook: ""
     skAPI: ""
