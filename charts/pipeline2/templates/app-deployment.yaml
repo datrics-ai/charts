@@ -76,6 +76,8 @@ spec:
               value: {{ .Values.deployer.redis.db | quote  }}
             - name: BACKEND_REDIS_PORT
               value: {{ .Values.deployer.redis.port | quote  }}
+            - name: DEFAULT_PIPELINE_VERSION
+              value: {{ default .Chart.AppVersion .Values.image.version }}
             {{- end }}
             {{- if .Values.worker.efs.enabled }}
             - name: EFS_DIRECTORY

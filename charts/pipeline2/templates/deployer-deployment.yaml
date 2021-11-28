@@ -54,6 +54,8 @@ spec:
               value: {{ .Values.deployer.tasksStream | quote  }}
             - name: PIPELINE_RESULTS_STREAM
               value: {{ .Values.deployer.resultsStream | quote  }}
+            - name: DEFAULT_PIPELINE_VERSION
+              value: {{ default .Chart.AppVersion .Values.image.version }}
           command: {{- toYaml .Values.deployer.command | nindent 12  }}
           args: {{- toYaml .Values.deployer.args | nindent 12 }}
           ports:
