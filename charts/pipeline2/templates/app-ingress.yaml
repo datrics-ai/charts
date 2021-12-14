@@ -1,5 +1,4 @@
-{{- if .Values.app.enabled -}}
-  {{- if .Values.ingress.enabled -}}
+{{- if .Values.ingress.enabled -}}
   {{- $fullName := include "pipeline2.app.fullname" . -}}
   {{- $svcPort := .Values.service.port -}}
   {{- $ingressPath := .Values.ingress.path -}}
@@ -38,5 +37,4 @@
                 serviceName: {{ $fullName }}
                 servicePort: {{ $svcPort }}
     {{- end }}
-  {{- end }}
 {{- end }}
