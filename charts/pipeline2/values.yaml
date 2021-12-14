@@ -55,6 +55,7 @@ worker:
   fullnameOverride: ""
 
 app:
+  enabled: true
   replicaCount: 1
   nameOverride: ""
   fullnameOverride: ""

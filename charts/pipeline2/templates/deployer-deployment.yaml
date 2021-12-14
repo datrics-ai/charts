@@ -56,6 +56,14 @@ spec:
               value: {{ .Values.deployer.resultsStream | quote  }}
             - name: DEFAULT_PIPELINE_VERSION
               value: {{ default .Chart.AppVersion .Values.image.version }}
+            - name: MINIO_HOST_URL
+              value: {{ .Values.config.minio.hostUrl | quote  }}
+            - name: MINIO_USE_SSL
+              value: {{ .Values.config.minio.useSSL | quote }}
+            - name: MINIO_ACCESS_KEY
+              value: {{ .Values.config.minio.accessKey | quote  }}
+            - name: MINIO_SECRET_KEY
+              value: {{ .Values.config.minio.secretKey | quote  }}
           command: {{- toYaml .Values.deployer.command | nindent 12  }}
           args: {{- toYaml .Values.deployer.args | nindent 12 }}
           ports:
