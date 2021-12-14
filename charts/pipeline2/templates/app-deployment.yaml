@@ -94,23 +94,6 @@ spec:
           - name: worker-efs
             mountPath: {{ default "/efs" .Values.worker.efs.efsDir | quote }}
           {{- end }}
-          livenessProbe:
-            initialDelaySeconds: 15
-            httpGet:
-              path: /
-              port: port-8000
-          readinessProbe:
-            initialDelaySeconds: 15
-            httpGet:
-              path: /
-              port: port-8000
-          startupProbe:
-            httpGet:
-              path: /
-              port: port-8000
-            failureThreshold: 30
-            periodSeconds: 30
-
           resources:
             {{- toYaml .Values.app.resources | nindent 12 }}
       {{- if .Values.worker.efs.enabled }}
