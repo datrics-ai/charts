@@ -100,10 +100,17 @@ spec:
               path: /
               port: port-8000
           readinessProbe:
-            initialDelaySeconds: 5
+            initialDelaySeconds: 15
             httpGet:
               path: /
               port: port-8000
+          startupProbe:
+            httpGet:
+              path: /
+              port: port-8000
+            failureThreshold: 30
+            periodSeconds: 30
+
           resources:
             {{- toYaml .Values.app.resources | nindent 12 }}
       {{- if .Values.worker.efs.enabled }}
