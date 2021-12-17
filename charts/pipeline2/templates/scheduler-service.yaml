@@ -1,3 +1,4 @@
+{{- if .Values.scheduler.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,3 +20,4 @@ spec:
       name: port-8786
   selector:
     {{- include "pipeline2.scheduler.selectorLabels" . | nindent 4 }}
+{{- end }}

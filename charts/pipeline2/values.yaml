@@ -88,6 +88,7 @@ app:
 
 
 scheduler:
+  enabled: true
   fullnameOverride: dask-scheduler
   strategy: 
     type: RollingUpdate

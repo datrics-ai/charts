@@ -1,3 +1,4 @@
+{{- if .Values.scheduler.enabled -}}
 {{- if .Values.scheduler.ingress.enabled -}}
 {{- $fullName := include "pipeline2.scheduler.fullname" . -}}
 {{- $svcPort := .Values.scheduler.dashboard.port -}}
@@ -37,4 +38,5 @@ spec:
               serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
   {{- end }}
+{{- end }}
 {{- end }}
