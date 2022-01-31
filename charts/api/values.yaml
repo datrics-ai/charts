@@ -126,7 +126,7 @@ config:
     getStatusRoute: "/job/status"
     cancelRoute: "/job/cancel"
   deploymentScheduler:
-    baseUrl: "http://pipeline2h-pipeline2-deployer:8001"
+    baseUrl: "http://pipeline2-pipeline2-deployer:8001"
   stripe:
     skWebHook: ""
     skAPI: ""

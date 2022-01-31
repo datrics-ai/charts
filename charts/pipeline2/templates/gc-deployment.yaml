@@ -66,15 +66,15 @@ spec:
           args: {{- toYaml .Values.gc.args | nindent 12 }}
           resources:
             {{- toYaml .Values.gc.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.gc.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+    {{- with .Values.gc.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with .Values.gc.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
