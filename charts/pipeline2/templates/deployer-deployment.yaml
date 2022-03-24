@@ -55,7 +55,7 @@ spec:
             - name: PIPELINE_RESULTS_STREAM
               value: {{ .Values.deployer.resultsStream | quote  }}
             - name: DEFAULT_PIPELINE_VERSION
-              value: {{ default .Chart.AppVersion .Values.image.version }}
+              value: {{ default .Chart.AppVersion .Values.image.version | quote }}
             - name: MINIO_HOST_URL
               value: {{ .Values.config.minio.hostUrl | quote  }}
             - name: MINIO_USE_SSL
