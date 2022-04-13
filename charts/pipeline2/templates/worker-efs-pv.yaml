@@ -4,14 +4,7 @@ kind: PersistentVolume
 metadata:
   name: worker-efs-pv
 spec:
-  capacity:
-    storage: 5Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: {{ .Values.worker.efs.className }}
-  csi:
-    driver: {{ .Values.worker.efs.driver }}
-    volumeHandle: {{ .Values.worker.efs.volumeHandle }}
+  {{ if .Values.worker.efs.pv }}
+  {{- toYaml .Values.worker.efs.pv | nindent 2  }}
+  {{- end }}
 {{- end }}

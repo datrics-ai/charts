@@ -4,10 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: worker-efs
 spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: {{ .Values.worker.efs.className }}
-  resources:
-    requests:
-      storage: 5Gi
+  {{ if .Values.worker.efs.pvc }}
+  {{- toYaml .Values.worker.efs.pvc | nindent 2  }}
+  {{- end }}
 {{- end }}

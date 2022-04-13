@@ -20,8 +20,24 @@ gc:
 worker:
   efs:
     enabled: false
-    # efsDir: /worker-efs
-    # className: efs-sc
+    # pvc:
+    #   storageClassName: efs-sc
+    #   accessModes:
+    #     - ReadWriteMany
+    #   resources:
+    #     requests:
+    #       storage: 5Gi
+    # pv: 
+    #   capacity:
+    #     storage: 5Gi
+    #   volumeMode: Filesystem
+    #   accessModes:
+    #     - ReadWriteMany
+    #   persistentVolumeReclaimPolicy: Retain
+    #   storageClassName: efs-sc
+    #   csi:
+    #     driver: csi
+    #     volumeHandle: vol1
   cache:
     enabled: false
     # tempDir: /worker-cache
