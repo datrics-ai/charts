@@ -1,8 +1,8 @@
-{{- if .Values.app.enabled -}}
+{{- if .Values.appdeployment.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "pipeline2.app.fullname" . }}
+  name: {{ include "pipeline2.app-deployment.fullname" . }}
   labels:
     {{- include "pipeline2.app.labels" . | nindent 4 }}
 spec:
@@ -41,8 +41,8 @@ spec:
           image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.version }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            {{- if .Values.app.envs }}
-            {{- toYaml .Values.app.envs | nindent 12  }}
+            {{- if .Values.app_deployment.envs }}
+            {{- toYaml .Values.app_deployment.envs | nindent 12 }}
             {{- end }}
             - name: MINIO_HOST_URL
               value: {{ .Values.config.minio.hostUrl | quote  }}
@@ -95,7 +95,7 @@ spec:
             mountPath: {{ default "/efs" .Values.app.efs.efsDir | quote }}
           {{- end }}
           resources:
-            {{- toYaml .Values.app.resources | nindent 12 }}
+            {{- toYaml .Values.app_deployment.resources | nindent 12 }}
       {{- if .Values.app.efs.enabled }}
       volumes:
       - name: app-efs

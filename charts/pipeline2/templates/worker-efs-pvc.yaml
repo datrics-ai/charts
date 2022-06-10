@@ -1,10 +1,10 @@
-{{- if .Values.worker.efs.enabled }}
+{{- if .Values.app.efs.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: worker-efs
+  name: app-efs
 spec:
-  {{ if .Values.worker.efs.pvc }}
-  {{- toYaml .Values.worker.efs.pvc | nindent 2  }}
+  {{ if .Values.app.efs.pvc }}
+  {{- toYaml .Values.app.efs.pvc | nindent 2  }}
   {{- end }}
 {{- end }}
