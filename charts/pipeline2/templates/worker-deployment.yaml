@@ -134,4 +134,4 @@ spec:
           storage: {{ .Values.worker.cache.storage.requests | quote  }}
       storageClassName: {{ .Values.worker.cache.storage.className | quote  }}
   {{- end }}
-  
+{{- end }}
