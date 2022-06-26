@@ -7,6 +7,11 @@ Expand the name of the chart.
 {{- default $defaultName .Values.app.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "pipeline2.app-deployment.name" -}}
+{{- $defaultName := printf "%s-app-deployment" .Chart.Name -}}
+{{- default $defaultName .Values.app_deployment.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "pipeline2.worker.name" -}}
 {{- $defaultName := printf "%s-worker" .Chart.Name -}}
 {{- default $defaultName .Values.worker.nameOverride | trunc 63 | trimSuffix "-" -}}
@@ -158,6 +163,15 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
+{{- define "pipeline2.app-deployment.labels" -}}
+helm.sh/chart: {{ include "pipeline2.chart" . }}
+{{ include "pipeline2.app-deployment.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
 {{- define "pipeline2.worker.labels" -}}
 helm.sh/chart: {{ include "pipeline2.chart" . }}
 {{ include "pipeline2.worker.selectorLabels" . }}
@@ -200,6 +214,11 @@ Selector labels
 */}}
 {{- define "pipeline2.app.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "pipeline2.app.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+{{- define "pipeline2.app-deployment.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "pipeline2.app-deployment.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 

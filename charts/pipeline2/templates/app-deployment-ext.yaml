@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: {{ include "pipeline2.app-deployment.fullname" . }}
   labels:
-    {{- include "pipeline2.app.labels" . | nindent 4 }}
+    {{- include "pipeline2.app-deployment.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.app.replicaCount }}
   {{- with .Values.app.strategy }}
@@ -13,11 +13,11 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "pipeline2.app.selectorLabels" . | nindent 6 }}
+      {{- include "pipeline2.app-deployment.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "pipeline2.app.selectorLabels" . | nindent 8 }}
+        {{- include "pipeline2.app-deployment.selectorLabels" . | nindent 8 }}
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9102'
