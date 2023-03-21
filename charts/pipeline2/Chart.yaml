@@ -3,4 +3,4 @@ appVersion: 1.2.14
 description: Datrics Pipeline Helm chart for Kubernetes
 name: pipeline2
 type: application
-version: 1.5.10
+version: 1.5.11

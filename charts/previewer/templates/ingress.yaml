@@ -2,9 +2,9 @@
 {{- $fullName := include "previewer.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- $ingressPath := .Values.ingress.path -}}
-{{- if and (.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">=1.19.0-0" .Capabilities.KubeVersion.Version) }}
+{{- if and (.Capabilities.APIVersions.Has "networking.k8s.io/v1") (gt .Capabilities.KubeVersion.Version "1.19.0") }}
 apiVersion: networking.k8s.io/v1
-{{- else if  and (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1") (semverCompare "<1.19.0-0" .Capabilities.KubeVersion.Version) }}
+{{- else if  and (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1") (lt .Capabilities.KubeVersion.Version "1.19.0") }}
 apiVersion: networking.k8s.io/v1beta1
 {{- else }}
 apiVersion: extensions/v1beta1
@@ -35,11 +35,11 @@ spec:
       http:
         paths:
           - path: {{ $ingressPath }}
-            {{- if and ($.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">=1.19.0-0" $.Capabilities.KubeVersion.Version)}}
+            {{- if and ($.Capabilities.APIVersions.Has "networking.k8s.io/v1") (gt $.Capabilities.KubeVersion.Version "1.19.0")}}
             pathType: Prefix
             {{- end }} 
             backend:
-              {{- if and ($.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">=1.19.0-0" $.Capabilities.KubeVersion.Version)}}
+              {{- if and ($.Capabilities.APIVersions.Has "networking.k8s.io/v1") (gt $.Capabilities.KubeVersion.Version "1.19.0")}}
               service:
                 name: {{ $fullName }}
                 port:
