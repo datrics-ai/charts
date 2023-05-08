@@ -16,6 +16,8 @@ gc:
   args:
     - "-c"
     - "python cron.py"
+  strategy:
+    type: Recreate
 
 worker:
   efs:
@@ -179,6 +181,8 @@ config:
 
 deployer:
   enabled: false
+  strategy:
+    type: Recreate
   redis:
     host: ""
     port: ""
