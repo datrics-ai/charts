@@ -146,8 +146,14 @@ spec:
               value: {{ .Values.config.privatePlan | quote }}
             - name: SENTRY_DSN
               value: {{ .Values.config.sentry.dsn | quote }}
-            - name: SENTRY_ENV
-              value: {{ .Values.config.sentry.env | quote }}
+            - name: DEFAULT_PIPELINE_VERSION
+              value: {{ .Values.config.pipeline_envs.version | quote }}
+            - name: EFS_DIRECTORY
+              value: { { .Values.config.pipeline_envs.efs_dir | quote } }
+            - name: ENV
+              value: { { .Values.config.pipeline_envs.env | quote } }
+            - name: WORKER_DOWNSCALE
+              value: { { .Values.config.pipeline_envs.downscale | quote } }
           ports:
             - name: port-3000
               containerPort: 3000

@@ -130,4 +130,6 @@ spec:
               value: {{ .Values.config.sentry.dsn | quote }}
             - name: SENTRY_ENV
               value: {{ .Values.config.sentry.env | quote }}
+            - name: DEFAULT_PIPELINE_VERSION
+              value: { { .Values.config.pipeline_envs.version | quote } }
       restartPolicy: Never
