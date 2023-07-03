@@ -154,6 +154,8 @@ spec:
               value: {{ .Values.config.pipeline_envs.env | quote }}
             - name: WORKER_DOWNSCALE
               value: {{ .Values.config.pipeline_envs.downscale | quote }}
+            - name: WORKERS_MODE
+              value: {{ .Values.config.pipeline_envs.mode | quote }}
           ports:
             - name: port-3000
               containerPort: 3000
