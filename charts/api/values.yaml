@@ -125,6 +125,7 @@ config:
     runRoute: "/job/create"
     getStatusRoute: "/job/status"
     cancelRoute: "/job/cancel"
+    chat_service_base_url: "https://https://ai-prep-api.platform.datrics.ai"
   deploymentScheduler:
     baseUrl: "http://pipeline2-pipeline2-deployer:8001"
   stripe:
