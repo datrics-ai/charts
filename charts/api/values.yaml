@@ -139,4 +139,3 @@ config:
     efs_dir: "/app-efs"
     downscale: "false"
     mode: "false"
-    chat_service_base_url: "http://ai-prep-backend:8000"
